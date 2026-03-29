@@ -1,0 +1,12 @@
+[project]
+name = "imouse-py"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "colorlog>=6.10.1",
+    "pydantic>=2.12.5",
+    "requests>=2.33.0",
+    "websocket-client>=1.9.0",
+]
