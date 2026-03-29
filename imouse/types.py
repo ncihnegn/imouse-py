@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TypedDict, List, Union
+from typing import List, TypedDict
 
 
 class SetDeviceParams(TypedDict, total=False):
@@ -48,6 +48,7 @@ class PhoneFileParams(TypedDict):
     name: str
     ext: str
 
+
 class SendHidParams(TypedDict):
     delayed: int
     key: str
@@ -82,7 +83,7 @@ class FunctionKeys(Enum):
     VOLUME_UP = "VolumeUp"  # 增加音量
     VOLUME_DOWN = "VolumeDown"  # 减小音量
     PLAY_PAUSE = "Play/Pause"  # 播放/暂停
-    SPOT_LIGHT = "WIN+ " # 聚焦搜索
+    SPOT_LIGHT = "WIN+ "  # 聚焦搜索
 
 
 class EventConstant:

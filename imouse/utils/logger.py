@@ -1,12 +1,10 @@
-import codecs
 import logging
-import re
-import sys
-import threading
-import os
 import inspect
+import os
+import threading
+from logging.handlers import RotatingFileHandler
 from typing import Optional
-from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
+
 import colorlog
 
 
@@ -54,7 +52,7 @@ class Logger:
         if log_dir:
             os.makedirs(log_dir, exist_ok=True)
             path = os.path.join(log_dir, f"{name}.log")
-            fh = RotatingFileHandler(path, maxBytes=10 * 1024 * 1024, backupCount=5,encoding='utf-8')
+            fh = RotatingFileHandler(path, maxBytes=10 * 1024 * 1024, backupCount=5, encoding='utf-8')
             fh.setFormatter(formatter)
             logger.addHandler(fh)
 

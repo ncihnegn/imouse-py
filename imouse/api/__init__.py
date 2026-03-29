@@ -1,17 +1,17 @@
 import json
+import time
 from typing import Union
 
-from .event_dispatcher import *
-from .payload import *
-import time
 from .client import Client
 from .config import Config
 from .device import Device
+from .event_dispatcher import event
 from .mouse_key import MouseKey
-from imouse.utils import logger
+from .payload import Payload
 from .pic import Pic
 from .shortcut import Shortcut
 from .user import User
+from imouse.utils import logger
 
 
 class API(Client, Device, Config, User, MouseKey, Pic, Shortcut):
@@ -25,7 +25,7 @@ class API(Client, Device, Config, User, MouseKey, Pic, Shortcut):
         super().start()
         time.sleep(1)
         while not self.is_connected():
-            logger.debug(f'连接失败,延时1秒等待')
+            logger.debug('连接失败,延时1秒等待')
             time.sleep(1)
 
     def _handle_message(self, message: str):
@@ -44,4 +44,4 @@ class API(Client, Device, Config, User, MouseKey, Pic, Shortcut):
         return ret
 
     def _get_payload(self) -> Payload:
-        pass
+        return self._payload

@@ -1,8 +1,4 @@
-from typing import Dict, List, Callable, Any, Set, Optional
-from threading import RLock
-
-from imouse.models import DeviceListResponse, DeviceListData, GroupListData, UsbListData, UserData, \
-    ImServerConfigResponse, ImServerConfigData
+from imouse.models import DeviceListData, GroupListData, ImServerConfigData, UsbListData, UserData
 from imouse.types import EventConstant
 from imouse.utils.utils import parse_model
 
