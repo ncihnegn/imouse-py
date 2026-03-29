@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, List
 from ...models import UsbInfo
 
 if TYPE_CHECKING:
-    from . import Console
+    from imouse.helper.console import Console
     from imouse import API
 
 
@@ -16,6 +16,8 @@ class Usb():
         """获取硬件列表"""
         ret = self._api.config_usb_get()
         if not self._console.successful(ret):
+            return []
+        if ret is None:
             return []
         result_list = ret.data.usb_list if ret.data and ret.data.usb_list else []
         return result_list

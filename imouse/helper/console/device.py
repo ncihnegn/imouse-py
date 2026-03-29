@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, List
 from ...models import DeviceInfo
 
 if TYPE_CHECKING:
-    from . import Console
+    from imouse.helper.console import Console
     from imouse import API
 
 
@@ -17,6 +17,8 @@ class Device():
         ret = self._api.device_get(device_ids)
         if not self._console.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.device_list if ret.data and ret.data.device_list else []
         return result_list
 
@@ -24,6 +26,8 @@ class Device():
         """通过分组id获取设备列表"""
         ret = self._api.device_group_getdev(gid)
         if not self._console.successful(ret):
+            return []
+        if ret is None:
             return []
         result_list = ret.data.device_list if ret.data and ret.data.device_list else []
         return result_list
@@ -34,6 +38,8 @@ class Device():
 
         if not self._console.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.id_list if ret.data and ret.data.id_list else []
         return result_list
 
@@ -41,6 +47,8 @@ class Device():
         """绑定硬件"""
         ret = self._api.device_bind_hardware(device_id, vid, pid)
         if not self._console.successful(ret):
+            return []
+        if ret is None:
             return []
         result_list = ret.data.id_list if ret.data and ret.data.id_list else []
         return result_list
@@ -50,6 +58,8 @@ class Device():
         ret = self._api.device_set_mouse_location(device_ids, location_crc)
         if not self._console.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.id_list if ret.data and ret.data.id_list else []
         return result_list
 
@@ -57,6 +67,8 @@ class Device():
         """设置设备分组"""
         ret = self._api.device_set_group(device_ids, group_id)
         if not self._console.successful(ret):
+            return []
+        if ret is None:
             return []
         result_list = ret.data.id_list if ret.data and ret.data.id_list else []
         return result_list
@@ -66,9 +78,11 @@ class Device():
         ret = self._api.device_del(device_ids)
         if not self._console.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.id_list if ret.data and ret.data.id_list else []
         return result_list
 
-    def restart(self, device_ids: str) -> List[str]:
+    def restart(self, device_ids: str) -> bool:
         """重启设备"""
         return self._console.successful(self._api.device_restart(device_ids))

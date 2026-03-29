@@ -33,15 +33,18 @@ class EventDispatcher:
             self._emit(fun, )
         elif fun == EventConstant.DEV_CONNECT or fun == EventConstant.DEV_DISCONNECT or fun == EventConstant.DEV_ROTATE or fun == EventConstant.DEV_CHANGE:
             ret = parse_model(DeviceListData, data)
-            self._emit(fun, ret.device_list[0])
+            if ret and ret.device_list:
+                self._emit(fun, ret.device_list[0])
         elif fun == EventConstant.DEV_DELETE or fun == EventConstant.GROUP_DELETE:
             self._emit(fun, data.get("list"))
         elif fun == EventConstant.GROUP_CHANGE:
             ret = parse_model(GroupListData, data)
-            self._emit(fun, ret.group_list[0].id, ret.group_list[0].name)
+            if ret and ret.group_list:
+                self._emit(fun, ret.group_list[0].id, ret.group_list[0].name)
         elif fun == EventConstant.USB_CHANGE:
             ret = parse_model(UsbListData, data)
-            self._emit(fun, ret.usb_list[0])
+            if ret and ret.usb_list:
+                self._emit(fun, ret.usb_list[0])
         elif fun == EventConstant.AIRPLAY_CONNECT_LOG or fun == EventConstant.IM_LOG:
             self._emit(fun, data.get("message"))
         elif fun == EventConstant.USER_INFO:

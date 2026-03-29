@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, List, Optional
 from ...models import GroupInfo
 
 if TYPE_CHECKING:
-    from . import Console
+    from imouse.helper.console import Console
     from imouse import API
 
 
@@ -17,6 +17,8 @@ class Group():
         ret = self._api.device_group_get(gids)
         if not self._console.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.group_list if ret.data and ret.data.group_list else []
         return result_list
 
@@ -24,8 +26,8 @@ class Group():
     def set(self, gid: str, name: str) -> Optional[GroupInfo]:
         """设置分组"""
         ret = self._api.device_group_set(gid, name)
-        if self._console.successful(ret):
-            if len(ret.data.group_list) == 0:
+        if self._console.successful(ret) and ret is not None:
+            if not ret.data.group_list:
                 return None
             return ret.data.group_list[0]
         return None
@@ -38,6 +40,8 @@ class Group():
         """删除分组"""
         ret = self._api.device_group_del(gids)
         if not self._console.successful(ret):
+            return []
+        if ret is None:
             return []
         result_list = ret.data.id_list if ret.data and ret.data.id_list else []
         return result_list

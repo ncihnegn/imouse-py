@@ -4,7 +4,7 @@ from ...models import AlbumFileResult, FileResult
 from ...types import AlbumFileParams, PhoneFileParams
 
 if TYPE_CHECKING:
-    from . import Device
+    from imouse.helper.device import Device
     from imouse import API
 
 
@@ -20,6 +20,8 @@ class Shortcut:
         ret = self._api.shortcut_album_get(self._device_id, album_name, num, outtime)
         if not self._device.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.result_list if ret.data and ret.data.result_list else []
         return result_list
 
@@ -28,6 +30,8 @@ class Shortcut:
         """上传文件到相册"""
         ret = self._api.shortcut_album_upload(self._device_id, album_name, files, is_zip, outtime)
         if not self._device.successful(ret):
+            return []
+        if ret is None:
             return []
         result_list = ret.data.result_list if ret.data and ret.data.result_list else []
         return result_list
@@ -42,6 +46,8 @@ class Shortcut:
         ret = self._api.shortcut_album_del(self._device_id, files, outtime)
         if not self._device.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.result_list if ret.data and ret.data.result_list else []
         return result_list
 
@@ -49,6 +55,8 @@ class Shortcut:
         """清空相册文件"""
         ret = self._api.shortcut_album_clear(self._device_id, album_name, outtime)
         if not self._device.successful(ret):
+            return []
+        if ret is None:
             return []
         result_list = ret.data.result_list if ret.data and ret.data.result_list else []
         return result_list
@@ -59,6 +67,8 @@ class Shortcut:
         ret = self._api.shortcut_file_get(self._device_id, path, outtime)
         if not self._device.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.result_list if ret.data and ret.data.result_list else []
         return result_list
 
@@ -67,6 +77,8 @@ class Shortcut:
         """上传文件到手机"""
         ret = self._api.shortcut_file_upload(self._device_id, path, files, is_zip, outtime)
         if not self._device.successful(ret):
+            return []
+        if ret is None:
             return []
         result_list = ret.data.result_list if ret.data and ret.data.result_list else []
         return result_list
@@ -82,6 +94,8 @@ class Shortcut:
         ret = self._api.shortcut_file_del(self._device_id, path, files, outtime)
         if not self._device.successful(ret):
             return []
+        if ret is None:
+            return []
         result_list = ret.data.result_list if ret.data and ret.data.result_list else []
         return result_list
 
@@ -93,6 +107,8 @@ class Shortcut:
         """获取手机剪切板内容"""
         ret = self._api.shortcut_clipboard_get(self._device_id, outtime)
         if not self._device.successful(ret):
+            return ""
+        if ret is None:
             return ""
         return ret.data.text if ret.data and ret.data.text else ""
 
@@ -128,5 +144,7 @@ class Shortcut:
         """获取外网ip"""
         ret = self._api.shortcut_device_ip(self._device_id, outtime)
         if not self._device.successful(ret):
+            return ""
+        if ret is None:
             return ""
         return ret.data.text if ret.data and ret.data.text else ""

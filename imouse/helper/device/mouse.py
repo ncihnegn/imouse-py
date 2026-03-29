@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from ...types import MouseSwipeParams
 
 if TYPE_CHECKING:
-    from . import Device
+    from imouse.helper.device import Device
     from imouse import API
 
 

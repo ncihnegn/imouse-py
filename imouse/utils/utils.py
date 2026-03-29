@@ -1,7 +1,7 @@
 import base64
 import json
 import re
-from typing import TypeVar, Optional, Type
+from typing import Any, Mapping, Optional, Type, TypeVar
 
 from pydantic import BaseModel, ValidationError
 
@@ -10,7 +10,7 @@ from imouse.utils import logger
 T = TypeVar('T', bound=BaseModel)
 
 
-def parse_model(model_class: Type[T], data: dict, raise_on_fail: bool = False) -> Optional[T]:
+def parse_model(model_class: Type[T], data: Mapping[str, Any], raise_on_fail: bool = False) -> Optional[T]:
     try:
         return model_class(**data)
     except ValidationError as ve:

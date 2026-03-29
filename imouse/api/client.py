@@ -1,7 +1,7 @@
 import abc
 import json
 import threading
-from typing import Union
+from typing import Optional, Union
 
 import requests
 import websocket
@@ -24,7 +24,7 @@ class Client:
         self._global_timeout = timeout
         self.host = host
         self.base_url = f'http://{host}:9911/api'
-        self._ws = WebSocketApp
+        self._ws: Optional[WebSocketApp] = None
         self._is_working = False
         self._is_connected = False
 
@@ -38,14 +38,14 @@ class Client:
     def stop(self):
         """停止网络通信。"""
         self._is_working = False
-        if self._is_connected:
+        if self._is_connected and self._ws is not None:
             self._ws.close()
 
     def is_connected(self) -> bool:
         """返回网络是否已连接。"""
         return self._is_connected
 
-    def _network_request(self, data: str, timeout: int = 0, is_async: bool = False) -> Union[str, bytes]:
+    def _network_request(self, data: str, timeout: int = 0, is_async: bool = False) -> Optional[Union[str, bytes]]:
         """
         发送网络请求。
 
@@ -59,6 +59,8 @@ class Client:
                 timeout = self._global_timeout
             if is_async:
                 logger.debug(f'webscoket请求，timeout={timeout}: \r\n' + data)
+                if self._ws is None:
+                    raise RuntimeError('WebSocket 未初始化')
                 self._ws.send(data)
             else:
                 logger.debug(safe_json_log(data, '请求:->'))
@@ -148,10 +150,13 @@ class Client:
                                           on_close=self._on_close)
         while self._is_working:
             try:
+                if self._ws is None:
+                    break
                 self._ws.run_forever(ping_interval=1)
                 self._is_connected = False
             except WebSocketException as e:
-                self._ws.close()
+                if self._ws is not None:
+                    self._ws.close()
                 logger.error(f'WebSocket 异常: {e}')
             except KeyboardInterrupt:
                 logger.debug('用户中断程序')

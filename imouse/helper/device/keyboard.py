@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, List
 from ...types import FunctionKeys, SendHidParams
 
 if TYPE_CHECKING:
-    from . import Device
+    from imouse.helper.device import Device
     from imouse import API
 
 

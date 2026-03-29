@@ -3,7 +3,7 @@ import inspect
 import os
 import threading
 from logging.handlers import RotatingFileHandler
-from typing import Optional
+from typing import Optional, cast
 
 import colorlog
 
@@ -11,7 +11,7 @@ import colorlog
 # 单例日志类
 class Logger:
     def __init__(self):
-        self.logger = None
+        self.logger: Optional[logging.Logger] = None
         self._is_debug = True
         self._log_show_thread_id = False
         self._log_show_file_and_line = False
@@ -58,6 +58,11 @@ class Logger:
 
         self.logger = logger
 
+    def _get_logger(self) -> logging.Logger:
+        if self.logger is None:
+            self.init()
+        return cast(logging.Logger, self.logger)
+
     def _build_msg(self, message):
         frame = inspect.stack()[3]
         filename = inspect.getframeinfo(frame[0]).filename
@@ -76,27 +81,27 @@ class Logger:
         if not self._is_debug:
             return
         prefix, msg_str = self._build_msg(msg)
-        self.logger.info("%s %s", prefix, msg_str)
+        self._get_logger().info("%s %s", prefix, msg_str)
 
     def debug(self, msg):
         if not self._is_debug:
             return
         prefix, msg_str = self._build_msg(msg)
-        self.logger.debug("%s %s", prefix, msg_str)
+        self._get_logger().debug("%s %s", prefix, msg_str)
 
     def warning(self, msg):
         if not self._is_debug:
             return
         prefix, msg_str = self._build_msg(msg)
-        self.logger.warning("%s %s", prefix, msg_str)
+        self._get_logger().warning("%s %s", prefix, msg_str)
 
     def error(self, msg):
         prefix, msg_str = self._build_msg(msg)
-        self.logger.error("%s %s", prefix, msg_str)
+        self._get_logger().error("%s %s", prefix, msg_str)
 
     def critical(self, msg):
         prefix, msg_str = self._build_msg(msg)
-        self.logger.critical("%s %s", prefix, msg_str)
+        self._get_logger().critical("%s %s", prefix, msg_str)
 
 
 # ================= 全局管理 =================

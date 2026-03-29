@@ -1,5 +1,6 @@
 import time
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
+
 from .image import Image
 from .keyboard import KeyBoard
 from .mouse import Mouse
@@ -7,11 +8,11 @@ from .shortcut import Shortcut
 from ...models import DeviceInfo
 
 if TYPE_CHECKING:
-    from . import Helper
+    from imouse.helper import Helper
 
 
 class Device:
-    def __init__(self, helper: "Helper", device_id: str, device_info: DeviceInfo = None):
+    def __init__(self, helper: "Helper", device_id: str, device_info: Optional[DeviceInfo] = None):
         self._helper = helper
         self._api = helper._api
         self._device_info = device_info
@@ -31,6 +32,9 @@ class Device:
         self._error_msg = None
 
     def successful(self, common_response, delay: float = 0):
+        if common_response is None:
+            self._set_error(-1, "响应为空")
+            return False
         try:
             if common_response.status != 200:
                 self._set_error(common_response.status, common_response.message)
@@ -104,7 +108,7 @@ class Device:
         当设备状态发生变化时（如分辨率、名称等），可调用此方法同步最新信息。
         """
         ret = self._api.device_get(self.device_id)
-        if self.successful(ret) and len(ret.data.device_list) > 0:
+        if self.successful(ret) and ret is not None and ret.data.device_list:
             self._device_info = ret.data.device_list[0]
 
     @property
@@ -118,4 +122,6 @@ class Device:
         """
         if self._device_info is None:
             self.refresh()
+        if self._device_info is None:
+            raise ValueError("设备信息不存在")
         return self._device_info

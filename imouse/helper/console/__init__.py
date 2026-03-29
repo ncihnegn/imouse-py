@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Optional
 from ...models import ImServerConfigData
 
 if TYPE_CHECKING:
-    from . import Helper
+    from imouse.helper import Helper
 
 from .device import Device
 from .group import Group
@@ -29,6 +29,9 @@ class Console:
         self._error_msg = None
 
     def successful(self, common_response):
+        if common_response is None:
+            self._set_error(-1, "响应为空")
+            return False
         try:
             if common_response.status != 200:
                 self._set_error(common_response.status, common_response.message)
@@ -48,9 +51,9 @@ class Console:
         return self.successful(self._helper._api.imserver_restart())
 
     @property
-    def get_imserver_config(self) -> ImServerConfigData:
+    def get_imserver_config(self) -> Optional[ImServerConfigData]:
         ret = self._helper._api.config_imserver_get()
-        if self.successful(ret):
+        if self.successful(ret) and ret is not None:
             self._imserver_config = ret.data
         else:
             self._imserver_config = None

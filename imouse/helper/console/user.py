@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Optional
 from ...models import UserData
 
 if TYPE_CHECKING:
-    from . import Console
+    from imouse.helper.console import Console
     from imouse import API
 
 
@@ -17,12 +17,16 @@ class User():
         ret = self._api.config_user_info()
         if not self._console.successful(ret):
             return None
-        return ret
+        if ret is None:
+            return None
+        return ret.data
 
     def login(self, user_name: str, password: str, utag: int) -> Optional[UserData]:
         """登录imouse账号"""
         ret = self._api.config_user_login(user_name, password, utag)
         if not self._console.successful(ret):
+            return None
+        if ret is None:
             return None
         return ret.data
 
