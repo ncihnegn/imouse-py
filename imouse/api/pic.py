@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from imouse.models import CommonResponse, FindImageResultResponse, FindImageCvResultResponse, OcrResultResponse, \
     FindMultiColorResponse
-from imouse.api import Payload
+from .payload import Payload
 from imouse.types import MultiColorParams
 from imouse.utils.utils import parse_model
 

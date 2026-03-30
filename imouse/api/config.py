@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Optional, Union
 
 from imouse.models import UsbListResponse, ImServerConfigResponse, ImServerConfigData, CommonResponse
-from imouse.api import Payload
+from .payload import Payload
 from imouse.utils.utils import parse_model
 
 

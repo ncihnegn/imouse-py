@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import List, Optional, Union
 
 from imouse.models import CommonResponse, AlbumFileResponse, PhoneFileResponse, ResultTextResponse
-from imouse.api import Payload
+from .payload import Payload
 from imouse.types import AlbumFileParams, PhoneFileParams
 from imouse.utils.utils import parse_model
 

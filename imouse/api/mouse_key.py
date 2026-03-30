@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import List, Optional, Union
 
 from imouse.models import CommonResponse
-from imouse.api import Payload
+from .payload import Payload
 from imouse.types import MouseSwipeParams, SendHidParams
 from imouse.utils.utils import parse_model
 
