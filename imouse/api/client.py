@@ -1,6 +1,7 @@
 import abc
 import json
 import threading
+import time
 from typing import Optional, Union
 
 import requests
@@ -27,18 +28,19 @@ class Client:
         self._ws: Optional[WebSocketApp] = None
         self._is_working = False
         self._is_connected = False
+        self._worker_thread: Optional[threading.Thread] = None
 
     def start(self):
         """启动网络通信。"""
         self._is_working = True
-        t1 = threading.Thread(target=self._initialize_websocket, name='WebSocket 初始化')
+        self._worker_thread = threading.Thread(target=self._initialize_websocket, name='WebSocket 初始化', daemon=True)
         logger.info("启动网络通信")
-        t1.start()
+        self._worker_thread.start()
 
     def stop(self):
         """停止网络通信。"""
         self._is_working = False
-        if self._is_connected and self._ws is not None:
+        if self._ws is not None:
             self._ws.close()
 
     def is_connected(self) -> bool:
@@ -154,12 +156,11 @@ class Client:
                     break
                 self._ws.run_forever(ping_interval=1)
                 self._is_connected = False
+                if self._is_working:
+                    time.sleep(0.1)
             except WebSocketException as e:
                 if self._ws is not None:
                     self._ws.close()
                 logger.error(f'WebSocket 异常: {e}')
-            except KeyboardInterrupt:
-                logger.debug('用户中断程序')
-                break
             except Exception as e:
                 logger.error(f'发生异常: {e}')

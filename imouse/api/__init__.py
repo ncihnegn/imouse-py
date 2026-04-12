@@ -23,10 +23,9 @@ class API(Client, Device, Config, User, MouseKey, Pic, Shortcut):
 
     def _start(self):
         super().start()
-        time.sleep(1)
-        while not self.is_connected():
+        while self._is_working and not self.is_connected():
             logger.debug('连接失败,延时1秒等待')
-            time.sleep(1)
+            time.sleep(0.1)
 
     def _handle_message(self, message: str):
         try:
